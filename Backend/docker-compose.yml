@@ -1,0 +1,44 @@
+version: "3"
+networks:
+  cassandraNet:
+    driver: bridge
+
+services:
+  cas1:
+    image: cassandra:latest
+    container_name: cas1
+    hostname: cas1
+    environment:
+      - "MAX_HEAP_SIZE=1G"
+      - "HEAP_NEWSIZE=256M"
+    ports:
+      - "9042:9042"
+    networks:
+      - cassandraNet
+  cas2:
+    image: cassandra:latest
+    container_name: cas2
+    hostname: cas2
+    environment:
+      - "MAX_HEAP_SIZE=1G"
+      - "HEAP_NEWSIZE=256M"
+      - "CASSANDRA_SEEDS=cas1"
+
+    ports:
+      - "9043:9042"
+    networks:
+      - cassandraNet
+  cas-init:
+    image: cassandra:latest
+    container_name: cas-init
+    depends_on:
+      - cas1
+      - cas2
+    volumes:
+      - ./schema.cql:/schema.cql
+    command: bash -c "until cqlsh cas1 -e 'describe keyspaces' > /dev/null 2>&1;
+      do echo 'not yet'; sleep 5;
+      done; cqlsh cas1 -f /schema.cql"
+    restart: on-failure
+    networks:
+      - cassandraNet
