@@ -9,7 +9,7 @@ namespace SploinkyAPI.Models
             throw new NotImplementedException();
         }
 
-        public User LoadFromDb(int Id)
+        public User LoadFromDb(Guid Id)
         {
             throw new NotImplementedException();
         }

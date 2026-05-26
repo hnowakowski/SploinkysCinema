@@ -8,7 +8,7 @@ namespace SploinkyAPI.Models
     public class Reservation : IDbItem<Reservation>
     {
         [NotNull]
-        public int Id { get; protected set; }
+        public Guid Id { get; protected set; }
         [NotNull]
         public string Name { get; protected set; } = String.Empty;
         [NotNull]
@@ -22,15 +22,15 @@ namespace SploinkyAPI.Models
 
         public static Reservation FromDBRow(Row row)
         {
-            return new Reservation(row.GetValue<int>("id"), row.GetValue<string>("name"), row.GetValue<string>("surname"), row.GetValue<int>("play_id"), row.GetValue<int>("row"), row.GetValue<int>("seat"));
+            return new Reservation(row.GetValue<Guid>("id"), row.GetValue<string>("name"), row.GetValue<string>("surname"), row.GetValue<int>("play_id"), row.GetValue<int>("row"), row.GetValue<int>("seat"));
         }
 
-        public Reservation LoadFromDb(int Id)
+        public Reservation LoadFromDb(Guid Id)
         {
             throw new NotImplementedException();
         }
         
-        public Reservation(int id, string name, string surname, int playid, int seat, int row)
+        public Reservation(Guid id, string name, string surname, int playid, int seat, int row)
         {
             this.Id = id;
             this.Name = name;

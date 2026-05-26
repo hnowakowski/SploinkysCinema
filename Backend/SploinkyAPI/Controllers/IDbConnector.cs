@@ -5,7 +5,6 @@ namespace SploinkyAPI.Controllers
 {
     public interface IDbConnector
     {
-        public Task<T> Query<T>(string query);
-        public List<Reservation> TestQuery(); //temp
+        public Task<Cassandra.RowSet> Query(Cassandra.IStatement statement);
     }
 }

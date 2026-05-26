@@ -8,30 +8,26 @@ namespace SploinkyAPI.Controllers
 {
     public class DbConnector : IDbConnector
     {
-        private ICluster _cluster;
-        private Cassandra.ISession _session;
+        private Cassandra.ICluster _cluster;
+        public readonly Cassandra.ISession session;
 
-        public async Task<T> Query<T>(string query)
+        public async Task<Cassandra.RowSet> Query(Cassandra.IStatement statement)
         {
-            throw new NotImplementedException();
-        }
-        
-        public List<Reservation> TestQuery() //temp
-        {
-            Cassandra.RowSet response = _session.Execute("select * from reservation;");
-            List<Reservation> res = new List<Reservation>();
-            foreach (Cassandra.Row row in response)
+            try
             {
-                res.Add(Reservation.FromDBRow(row));
+                return await session.ExecuteAsync(statement);
             }
-            return res;
+            catch (Exception e)
+            {
+                throw new Exception("Query failed", e);
+            }
         }
 
-        public DbConnector() // temp
+        public DbConnector() // TODO: read db address and port from some config yaml
         {
             _cluster = Cluster.Builder().AddContactPoints("127.0.0.1").WithPort(9042).Build();
-            _session = _cluster.Connect("reservations");
-            Console.WriteLine($"Connected to {_session.Cluster}");
+            session = _cluster.Connect("reservations");
+            Console.WriteLine($"Connected to {session.Cluster}");
         }
 
     }
