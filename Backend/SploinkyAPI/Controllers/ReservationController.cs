@@ -3,6 +3,7 @@ using Cassandra.Mapping;
 using Microsoft.AspNetCore.Mvc;
 using SploinkyAPI.Models;
 using System.Net;
+using SploinkyAPI.Controllers;
 
 namespace SploinkyAPI.Controllers
 {
@@ -11,26 +12,21 @@ namespace SploinkyAPI.Controllers
     public class ReservationController : ControllerBase
     {
         private readonly ILogger<ReservationController> _logger;
-        private readonly IDbConnector _dbConnector;
+        private readonly Cassandra.ISession _session;
+        private readonly IRepository<Reservation> _connector;
 
-        public ReservationController(ILogger<ReservationController> logger)
+        public ReservationController(Cassandra.ISession session, IRepository<Reservation> connector, ILogger<ReservationController> logger)
         {
             _logger = logger;
-            _dbConnector = new DbConnector();
+            _session = session;
+            _connector = connector;
         }
 
         [HttpGet]
         [Route("api/reservations/getall")]
         public async Task<List<Reservation>> GetAll()
         {
-            Cassandra.RowSet response = await _dbConnector.Query(new Cassandra.SimpleStatement("SELECT * FROM reservation;"));
-            List<Reservation> list = new List<Reservation>();
-            foreach (var item in response)
-            {
-                list.Add(Reservation.FromDBRow(item));
-            }
-            Console.WriteLine(list.Count);
-            return list;
+            return await _connector.GetAll();
         }
 
         [HttpGet]
@@ -39,7 +35,7 @@ namespace SploinkyAPI.Controllers
         {
             throw new NotImplementedException();
             //Reservation user = mapper.Single<Reservation>("SELECT * FROM reservation WHERE id = ?", Id);
-            Cassandra.RowSet response = await _dbConnector.Query(new Cassandra.SimpleStatement("SELECT * FROM reservation;"));
+            Cassandra.RowSet response = await _session.ExecuteAsync(new Cassandra.SimpleStatement("SELECT * FROM reservation;"));
             List<Reservation> list = new List<Reservation>();
             foreach (var item in response)
             {
