@@ -1,3 +1,4 @@
+using Cassandra.Mapping;
 using SploinkyAPI.Controllers;
 using SploinkyAPI.Models;
 
@@ -18,10 +19,8 @@ Cassandra.ISession session = cluster.Connect("reservations");
 builder.Services.AddSingleton(cluster);
 builder.Services.AddSingleton(session);
 
-// database repositories for handling querries
-// could do all the logic in the controller classes but this should allow for easy mocking down the road
-IRepository<Reservation> reservationConnector = new ReservationRepository(session);
-builder.Services.AddSingleton(reservationConnector);
+// config for model mappings
+MappingConfiguration.Global.Define<ModelMappings>();
 
 var app = builder.Build();
 

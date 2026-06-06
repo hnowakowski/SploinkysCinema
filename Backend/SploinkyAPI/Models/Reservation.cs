@@ -5,30 +5,23 @@ using System.Text.Json.Serialization;
 
 namespace SploinkyAPI.Models
 {
-    public class Reservation : IDbItem<Reservation>
+    public class Reservation
     {
         [NotNull]
-        public Guid Id { get; protected set; }
+        public Guid Id { get; set; }
         [NotNull]
-        public string Name { get; protected set; } = String.Empty;
+        public string Name { get; set; } = String.Empty;
         [NotNull]
-        public string Surname { get; protected set; } = String.Empty;
+        public string Surname { get; set; } = String.Empty;
         [NotNull]
-        public int PlayId { get; protected set; }
+        public int PlayId { get; set; }
         [NotNull]
-        public int Seat { get; protected set; }
+        public int Seat { get; set; }
         [NotNull]
-        public int Row { get; protected set; }
+        public int Row { get; set; }
 
-        public static Reservation FromDBRow(Row row)
-        {
-            return new Reservation(row.GetValue<Guid>("id"), row.GetValue<string>("name"), row.GetValue<string>("surname"), row.GetValue<int>("play_id"), row.GetValue<int>("row"), row.GetValue<int>("seat"));
-        }
+        public Reservation() {}
 
-        public Reservation LoadFromDb(Guid Id)
-        {
-            throw new NotImplementedException();
-        }
         
         public Reservation(Guid id, string name, string surname, int playid, int seat, int row)
         {
