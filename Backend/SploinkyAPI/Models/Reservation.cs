@@ -7,31 +7,23 @@ namespace SploinkyAPI.Models
 {
     public class Reservation
     {
-        [NotNull]
-        public Guid Id { get; set; }
-        [NotNull]
-        public string Name { get; set; } = String.Empty;
-        [NotNull]
-        public string Surname { get; set; } = String.Empty;
-        [NotNull]
-        public int PlayId { get; set; }
-        [NotNull]
+        public Guid MovieId { get; set; }
+        public string MovieName { get; set; } = String.Empty;
+        public string Username { get; set; } = String.Empty;
         public int Seat { get; set; }
-        [NotNull]
         public int Row { get; set; }
+        public DateTime LastUpdate { get; set; }
 
         public Reservation() {}
 
-        
-        public Reservation(Guid id, string name, string surname, int playid, int seat, int row)
+        public Reservation(Guid movieId, string movieName, string username, int seat, int row, DateTime lastUpdate)
         {
-            this.Id = id;
-            this.Name = name;
-            this.Surname = surname;
-            this.PlayId = playid;
-            this.Seat = seat;
-            this.Row = row;
+            MovieId = movieId;
+            MovieName = movieName;
+            Username = username;
+            Seat = seat;
+            Row = row;
+            LastUpdate = lastUpdate;
         }
-        
     }
 }

@@ -20,48 +20,63 @@ namespace SploinkyAPI.Controllers
             _session = session;
         }
 
+        // dont actually use this in the app, this is just for testing purposes
         [HttpGet]
         [Route("api/reservations/getall")]
         public async Task<List<Reservation>> GetAll()
         {
             IMapper mapper = new Mapper(_session);
-            IEnumerable<Reservation> reservations = await mapper.FetchAsync<Reservation>("SELECT * FROM RESERVATION;");
+            IEnumerable<Reservation> reservations = await mapper.FetchAsync<Reservation>("SELECT * FROM RESERVATIONS;");
             return reservations.ToList();
         }
 
+        // get all reservations for a given movie when opening the movie seat-picking window
         [HttpGet]
         [Route("api/reservations/get")]
-        public async Task<Reservation> Get(Guid Id)
+        public async Task<List<Reservation>> Get(Guid movieId)
         {
             IMapper mapper = new Mapper(_session);
-            // fetch returns an ienumerable so i have to grab it like that even if i only care about one item
-            IEnumerable<Reservation> reservations = await mapper.FetchAsync<Reservation>("SELECT * FROM RESERVATION WHERE id = ?;", Id);
-            return reservations.First(); //guids *should* be unique so i assume this will always have one element
+            IEnumerable<Reservation> reservations = await mapper.FetchAsync<Reservation>("SELECT * FROM RESERVATIONS WHERE movie_id = ?;", movieId);
+            return reservations.ToList();
         }
 
+        // making a single reservation
         [HttpPost]
         [Route("api/reservations/insert")]
-        public async Task Insert(Reservation reservation)
+        public async Task Insert(Reservation reservation) // TODO: add status returns for stress tests later for if a seat was already taken
         {
             IMapper mapper = new Mapper(_session);
             await mapper.InsertAsync<Reservation>(reservation);
         }
 
+        // changing a reservation? it's a requirement but i dont really have a good idea for it, i guess you can give a reserved seat to someone else lol
+        // yeah so basically for changing the username on a reservation
         [HttpPost]
         [Route("api/reservations/update")]
-        public async Task Update(Reservation reservation)
+        public async Task Update(Reservation reservation) 
         {
             IMapper mapper = new Mapper(_session);
             await mapper.UpdateAsync<Reservation>(reservation);
         }
 
+        // cancelling a single reservation
         [HttpPost]
         [Route("api/reservations/delete")]
         // the mapper takes entire object as input but deletes ONLY based on the id, other attribs dont have to match
-        public async Task Delete(Reservation reservation)
+        // added an explicit condition to the query to make sure this does not accidentally nuke all the reservations on a given movie_id
+        public async Task Delete(Guid movieId, int seat, int row)
         {
             IMapper mapper = new Mapper(_session);
-            await mapper.DeleteAsync<Reservation>(reservation);
+            await mapper.DeleteAsync<Reservation>("WHERE movie_id = ? AND seat = ? AND row = ?", movieId, seat, row);
+        }
+
+        // cancelling all reservations made by a user on a given movie (pair requirement and for a stress test)
+        [HttpPost]
+        [Route("api/reservations/deleteall")]
+        public async Task DeleteAll(Guid movieId, string username)
+        {
+            // make it all seperate requests in a loop to keep them atomic?
+            throw new NotImplementedException();
         }
     }
 }
