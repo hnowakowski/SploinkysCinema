@@ -11,7 +11,7 @@ insert into Movies (movie_id, movie_name, image_path) values (2e35f12b-7dcd-46ee
 insert into Movies (movie_id, movie_name, image_path) values (5ff94089-6b0b-4e6b-85b2-1dccd568f60c, 'Iron Lung', './MovieAssets/Iron Lung.png');
 
 /* display occupied seats on a given movie when entering the reservation page, also have each seat with info abt who reserved it */
-create table if not exists Reservations (movie_id uuid, movie_name text, username text, seat int, row int, last_update timestamp, primary key (movie_id, seat, row));
+create table if not exists Reservations (movie_id uuid, movie_name text, username text, seat int, row int, last_update timestamp, primary key (movie_id, username, seat, row));
 
 insert into Reservations (movie_id, movie_name, username, seat, row, last_update) values (ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1, 'FNAF2', 'Jan Kowalski', 1, 3, 2026-06-11T14:59:32.82);
 insert into Reservations (movie_id, movie_name, username, seat, row, last_update) values (ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1, 'FNAF2', 'Miłosz Kadziński', 4, 2, 2026-06-11T14:59:32.82);
