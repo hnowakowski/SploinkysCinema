@@ -81,7 +81,7 @@ export default function SeatSelect({ reservations, movieId, movieName, onRefresh
 
     return (
         <div>
-            {/* Seat grid */}
+            {/*seat grid */}
             {Array.from({ length: 10 }, (_, ri) => (
             <div key={ri} style={{ display: 'flex', gap: 4 }}>
             <span style={{ width: 20 }}>{ri + 1}</span>
@@ -99,7 +99,7 @@ export default function SeatSelect({ reservations, movieId, movieName, onRefresh
             </div>
         ))}
 
-        {/* Popup */}
+        {/*popup */}
         {popup && (
             <div onClick={closePopup} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div onClick={e => e.stopPropagation()} style={{ background: '#fff', color: '#000', padding: '1.5rem', borderRadius: 8, minWidth: 240 }}>
