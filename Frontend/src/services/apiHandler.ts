@@ -2,25 +2,25 @@ import axios from "axios";
 import type { Reservation } from "../types/reservation";
 import type { Movie } from "../types/movie";
 
-const BASE_URL = "https://localhost:7117/Reservation/api/reservations";
+const api = axios.create({baseURL: "/api/reservations"});
 
 export const getMovies = () =>
-   axios.get<Movie[]>(`${BASE_URL}/getmovies`);
+   api.get<Movie[]>('/getmovies');
 
 export const getMovieSeats = (movieId: string) =>
-   axios.get<number[][]>(`${BASE_URL}/getmovieseats`, { params: { movieId } });
+   api.get<number[][]>('/getmovieseats', { params: { movieId } });
 
 export const getReservation = (movieId: string, seat: number, row: number, username: string) =>
-  axios.get<Reservation>(`${BASE_URL}/getreservation`, { params: { movieId, seat, row, username } });
+  api.get<Reservation>('/getreservation', { params: { movieId, seat, row, username } });
 
 export const postReservation = (reservation: Reservation) =>
-  axios.post(`${BASE_URL}/post`, reservation);
+  api.post('/post', reservation);
 
 export const putReservation = (reservation: Reservation, newUsername: string) =>
-  axios.put(`${BASE_URL}/put`, reservation, { params: { newUsername } });
+  api.put('/put', reservation, { params: { newUsername } });
 
 export const deleteReservation = (reservation: Reservation) =>
-  axios.delete(`${BASE_URL}`, { data: reservation });
+  api.delete('/delete', { data: reservation });
 
 export const deleteAll = (movieId: string, username: string) =>
-  axios.delete(`${BASE_URL}/deleteall`, { params: { movieId, username } });
+  api.delete('/deleteall', { params: { movieId, username } });

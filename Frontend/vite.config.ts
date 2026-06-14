@@ -7,7 +7,10 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://localhost:7117'
+        target: 'https://localhost:7117',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => '/Reservation' + path,
       }
     }
   }

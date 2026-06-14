@@ -3,9 +3,17 @@ using SploinkyAPI.Controllers;
 using SploinkyAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+// allow frontend to send requests
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5174/").AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
+
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -23,6 +31,7 @@ builder.Services.AddSingleton(session);
 MappingConfiguration.Global.Define<ModelMappings>();
 
 var app = builder.Build();
+app.UseCors("AllowFrontend");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
