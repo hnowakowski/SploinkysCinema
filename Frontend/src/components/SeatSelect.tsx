@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useUsername } from "../store/username";
-import { postReservation, deleteReservation, deleteAll, putReservation} from "../services/apiHandler";
+import { postReservation, deleteReservation, putReservation} from "../services/apiHandler";
 import type { Reservation } from "../types/reservation";
 
 interface Props {
