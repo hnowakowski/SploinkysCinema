@@ -18,8 +18,7 @@ namespace SploinkyAPI.Models
                 .Column(u => u.MovieName, cm => cm.WithName("movie_name"))
                 .Column(u => u.Username, cm => cm.WithName("username"))
                 .Column(u => u.Seat, cm => cm.WithName("seat"))
-                .Column(u => u.Row, cm => cm.WithName("row"))
-                .Column(u => u.LastUpdate, cm => cm.WithName("last_update"));
+                .Column(u => u.Row, cm => cm.WithName("row"));
         }
     }
 }

@@ -19,8 +19,7 @@ for i in range(100):
             "movieName": "FNAF2",
             "username": "Freddy Fazbear",
             "seat": (i % 10) + 1,
-            "row": (i // 10) + 1,
-            "lastUpdate": datetime.now(timezone.utc).isoformat()
+            "row": (i // 10) + 1
         })
     
 for i in range(100):
@@ -30,8 +29,7 @@ for i in range(100):
             "movieName": "FNAF2",
             "username": "William Afton",
             "seat": (i % 10) + 1,
-            "row": (i // 10) + 1,
-            "lastUpdate": datetime.now(timezone.utc).isoformat()
+            "row": (i // 10) + 1
         })
 
 async def req(client_id, session):
@@ -80,9 +78,9 @@ async def run():
     print(f"Time elapsed: {total_time:.4f}s")
     for client_name, data in stats.items():
         print(f"{client_name}:")
-        print(f"  Successes:  {data['successes']}/{100}")
-        print(f"  Fails:      {data['fails']}/{100}")
-        print(f"  Seats:      {data['seats']}/{100}")
+        print(f"Successes:  {data['successes']}/{100}")
+        print(f"Fails:      {data['fails']}/{100}")
+        print(f"Seats:      {data['seats']}/{100}")
 
 if __name__ == "__main__":
     asyncio.run(run())

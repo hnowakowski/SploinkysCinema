@@ -13,14 +13,14 @@ ENDPOINTS = [
     {"method": "GET", "url": f"{BASE_URL}/getall"},
     {"method": "GET", "url": f"{BASE_URL}/getmovieseats", "json": {"movieId": "ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1"}},
     {"method": "POST", "url": f"{BASE_URL}/post",
-      "json": {"movieId": "ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1","movieName": "FNAF2","username": "Freddy Fazbear","seat": 7,"row": 6,"lastUpdate": datetime.now(timezone.utc).isoformat()}},
+      "json": {"movieId": "ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1","movieName": "FNAF2","username": "Freddy Fazbear","seat": 7,"row": 6}},
     {"method": "PUT", "url": f"{BASE_URL}/put",
-      "json": {"movieId": "ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1","movieName": "FNAF2","username": "Freddy Fazbear","seat": 7,"row": 6,"lastUpdate": datetime.now(timezone.utc).isoformat()},
+      "json": {"movieId": "ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1","movieName": "FNAF2","username": "Freddy Fazbear","seat": 7,"row": 6},
       "params": "William Afton"},
     {"method": "DELETE", "url": f"{BASE_URL}/delete",
-     "json": {"movieId": "ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1","movieName": "FNAF2","username": "Freddy Fazbear","seat": 7,"row": 6,"lastUpdate": datetime.now(timezone.utc).isoformat()}},
+     "json": {"movieId": "ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1","movieName": "FNAF2","username": "Freddy Fazbear","seat": 7,"row": 6}},
     {"method": "DELETE", "url": f"{BASE_URL}/delete",
-     "json": {"movieId": "ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1","movieName": "FNAF2","username": "William Afton","seat": 7,"row": 6,"lastUpdate": datetime.now(timezone.utc).isoformat()}},
+     "json": {"movieId": "ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1","movieName": "FNAF2","username": "William Afton","seat": 7,"row": 6}},
 ]
 
 async def req(client_id, session):
@@ -65,8 +65,8 @@ async def run():
         for idx, (successes, fails) in enumerate(results):
             client_name = "Client_A" if idx == 0 else "Client_B"
             print(f"{client_name}:")
-            print(f"  Successes:  {successes}/{100}")
-            print(f"  Fails:      {fails}/{100}")
+            print(f"Successes:  {successes}/{100}")
+            print(f"Fails:      {fails}/{100}")
 
 if __name__ == "__main__":
     asyncio.run(run())

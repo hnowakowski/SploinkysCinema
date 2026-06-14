@@ -33,10 +33,10 @@ def run():
             print(f"Iteration {i}")
         try:
             response = requests.post(URL, json=payload, verify=False)
-            if hit_200 <= 96 and response.status_code == 200:
+            if hit_200 < 96 and response.status_code == 200:
                 results.append(True)
                 hit_200 += 1
-            elif 4 <= hit_409 and response.status_code == 409:
+            elif hit_409 < 4 and response.status_code == 409:
                 results.append(True)
                 hit_409 += 1
             else:

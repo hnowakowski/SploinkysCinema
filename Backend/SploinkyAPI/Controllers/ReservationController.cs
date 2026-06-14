@@ -95,12 +95,11 @@ namespace SploinkyAPI.Controllers
         [Route("api/reservations/post")]
         public async Task<ActionResult> Insert(Reservation reservation)
         {
-            DateTime lastUpdate = DateTime.Now;
             // execute with a session instead of insert with a mapper cause i need to specify the full query
             // to add a check if seat was already taken and to get the status code
             SimpleStatement statement = new SimpleStatement(
-                "INSERT INTO RESERVATIONS (movie_id, movie_name, username, seat, row, last_update) VALUES (?, ?, ?, ?, ?, ?) IF NOT EXISTS;",
-                reservation.MovieId, reservation.MovieName, reservation.Username, reservation.Seat, reservation.Row, lastUpdate);
+                "INSERT INTO RESERVATIONS (movie_id, movie_name, username, seat, row) VALUES (?, ?, ?, ?, ?) IF NOT EXISTS;",
+                reservation.MovieId, reservation.MovieName, reservation.Username, reservation.Seat, reservation.Row);
             //statement.SetSerialConsistencyLevel(ConsistencyLevel.Serial);
             try
             {
