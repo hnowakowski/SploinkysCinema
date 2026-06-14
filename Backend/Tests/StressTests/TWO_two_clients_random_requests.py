@@ -23,7 +23,7 @@ ENDPOINTS = [
      "json": {"movieId": "ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1","movieName": "FNAF2","username": "William Afton","seat": 7,"row": 6,"lastUpdate": datetime.now(timezone.utc).isoformat()}},
 ]
 
-async def client_task(client_id, session):
+async def req(client_id, session):
     successes = 0
     fails = 0
     
@@ -51,8 +51,8 @@ async def run():
     print("\n==== TWO CLIENTS SPAMMING 100 RANDOM REQUESTS =====")
     
     async with aiohttp.ClientSession() as session:
-        task1 = client_task("Client_A", session)
-        task2 = client_task("Client_B", session)
+        task1 = req("Client_A", session)
+        task2 = req("Client_B", session)
         
         start_time = time.perf_counter()
         results = await asyncio.gather(task1, task2)
