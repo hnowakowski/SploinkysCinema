@@ -9,8 +9,6 @@ URL = "https://localhost:7117/Reservation/api/reservations/post"
 
 PAYLOADS = []
 # Book an entire theater for FNAF2, so 10x10
-# There are a few taken seats in the mock schema, so there should be 4 409's and 96 200's
-# (as a fun bonus this also checks if the seat is already taken)
 for i in range(100):
     PAYLOADS.append(
         {
@@ -18,27 +16,20 @@ for i in range(100):
             "movieName": "FNAF2",
             "username": "Freddy Fazbear",
             "seat": (i % 10) + 1,
-            "row": (i // 10) + 1,
-            "lastUpdate": datetime.now(timezone.utc).isoformat()
+            "row": (i // 10) + 1
         })
     
 def run():
     print("\n==== FREDDY FAZBEAR BOOKS THE ENTIRE THEATER =====")
     start_time = time.perf_counter()
     results = []
-    hit_409 = 0
-    hit_200 = 0
     for i, payload in enumerate(PAYLOADS):
         if i % 10 == 0:
             print(f"Iteration {i}")
         try:
             response = requests.post(URL, json=payload, verify=False)
-            if hit_200 < 96 and response.status_code == 200:
+            if response.status_code == 200:
                 results.append(True)
-                hit_200 += 1
-            elif hit_409 < 4 and response.status_code == 409:
-                results.append(True)
-                hit_409 += 1
             else:
                 print(f"FAILED {i}, status code: {response.status_code}")
                 results.append(False)

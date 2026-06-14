@@ -100,7 +100,6 @@ namespace SploinkyAPI.Controllers
             SimpleStatement statement = new SimpleStatement(
                 "INSERT INTO RESERVATIONS (movie_id, movie_name, username, seat, row) VALUES (?, ?, ?, ?, ?) IF NOT EXISTS;",
                 reservation.MovieId, reservation.MovieName, reservation.Username, reservation.Seat, reservation.Row);
-            //statement.SetSerialConsistencyLevel(ConsistencyLevel.Serial);
             try
             {
                 RowSet res = await _session.ExecuteAsync(statement);
@@ -127,7 +126,6 @@ namespace SploinkyAPI.Controllers
         {
             SimpleStatement statement = new SimpleStatement("UPDATE RESERVATIONS SET username = ? WHERE movie_id = ? AND seat = ? AND row = ? IF username = ?;",
                     newUsername, reservation.MovieId, reservation.Seat, reservation.Row, reservation.Username);
-            //statement.SetSerialConsistencyLevel(ConsistencyLevel.Serial);
             try
             {
                 RowSet res = await _session.ExecuteAsync(statement);
@@ -155,7 +153,6 @@ namespace SploinkyAPI.Controllers
         {
             SimpleStatement statement = new SimpleStatement("DELETE FROM RESERVATIONS WHERE movie_id = ? AND seat = ? AND row = ? IF EXISTS",
                 reservation.MovieId, reservation.Seat, reservation.Row);
-            //statement.SetSerialConsistencyLevel(ConsistencyLevel.Serial);
             try
             {
                 RowSet res = await _session.ExecuteAsync(statement);
@@ -179,8 +176,36 @@ namespace SploinkyAPI.Controllers
         [Route("api/reservations/deleteall")]
         public async Task<ActionResult> DeleteAll(Guid movieId, string username)
         {
-            // make a batch to keep them atomic?
-            throw new NotImplementedException();
+            IMapper mapper = new Mapper(_session);
+            try
+            {
+                IEnumerable<Reservation> reservations = await mapper.FetchAsync<Reservation>(
+                    "SELECT * FROM RESERVATIONS WHERE movie_id = ? AND username = ? ALLOW FILTERING;", movieId, username);
+                List<Reservation>? res = reservations.ToList();
+                if (res == null)
+                {
+                    return StatusCode(404, new { message = "Select failed, no reservations on a movie found" });
+                }
+                try
+                {
+                    foreach (Reservation r in res)
+                    {
+                        SimpleStatement statement = new SimpleStatement("DELETE FROM RESERVATIONS WHERE movie_id = ? AND seat = ? AND row = ? IF username = ?;",
+                                movieId, r.Seat, r.Row, username);
+                        await _session.ExecuteAsync(statement);
+                    }
+                    return StatusCode(200, new { message = "Bulk delete success" });
+                }
+                catch(Exception ex)
+                {
+                    return StatusCode(500, new { message = $"Delete failed: {ex.Message}" });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Selecting occupied seats failed: {ex.Message}" });
+            }
         }
     }
 }
