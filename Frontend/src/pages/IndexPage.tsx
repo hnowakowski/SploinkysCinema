@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getMovies } from "../services/apiHandler";
 import type { Movie } from "../types/movie";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 export default function IndexPage() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -28,12 +29,13 @@ export default function IndexPage() {
 
   return(
     <main>
-        <h1>GO WATCH THESE</h1>
-        <ul>
-          {movies.map((movie) => (
-            <li key={movie.movieId}>
+      <Navbar />
+      <h1>GO WATCH THESE</h1>
+      <ul>
+        {movies.map((movie) => (
+          <li key={movie.movieId}>
               <button onClick={() => navigate(`/movie/${movie.movieId}`)}>
-                <img src={movie.imagePath} alt={`Pretend this is an image for ${movie.movieName}`} width={500} />
+                <img src={movie.imagePath} alt={`Pretend this is an image for ${movie.movieName}`} width={400} />
                 <h3>{movie.movieName}</h3>
               </button>
             </li>
