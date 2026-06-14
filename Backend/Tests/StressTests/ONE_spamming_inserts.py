@@ -46,7 +46,7 @@ def run():
     fails = results.count(False)
     total_time = end_time - start_time
         
-    print("\n==== ONE HUNDRED INSERTS RESULTS =====")
+    print("\n==== RESULTS =====")
     print(f"Time elapsed: {total_time:.4f}s")
     print(f"Successes:    {successes}/100")
     print(f"Fails:        {fails}/100")
