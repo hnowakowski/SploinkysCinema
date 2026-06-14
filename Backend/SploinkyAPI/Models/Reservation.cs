@@ -12,11 +12,11 @@ namespace SploinkyAPI.Models
         public string Username { get; set; } = String.Empty;
         public int Seat { get; set; }
         public int Row { get; set; }
-        public DateTime LastUpdate { get; set; }
+        public DateTimeOffset LastUpdate { get; set; }
 
         public Reservation() {}
 
-        public Reservation(Guid movieId, string movieName, string username, int seat, int row, DateTime lastUpdate)
+        public Reservation(Guid movieId, string movieName, string username, int seat, int row, DateTimeOffset lastUpdate)
         {
             MovieId = movieId;
             MovieName = movieName;

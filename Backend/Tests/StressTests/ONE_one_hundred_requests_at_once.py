@@ -97,7 +97,7 @@ async def fetch(session, idx):
         print(f"FAILED {idx}, exception: {e}")
         return False
 
-async def one_hundred_requests():
+async def run():
     print("\n==== SENDING ONE HUNDRED REQUESTS AT ONCE =====")
     async with aiohttp.ClientSession() as session:
         tasks = [fetch(session, i) for i in range(100)]
@@ -115,4 +115,4 @@ async def one_hundred_requests():
         print(f"Fails:        {fails}/100")
 
 if __name__ == "__main__":
-    asyncio.run(one_hundred_requests())
+    asyncio.run(run())

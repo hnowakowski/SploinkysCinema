@@ -13,7 +13,7 @@ builder.Services.AddSwaggerGen();
 
 //setting up a db connection and establishing a session
 // TODO: read db address and port from some config yaml
-Cassandra.ICluster cluster = Cassandra.Cluster.Builder().AddContactPoint("127.0.0.1").WithPort(9043).Build();
+Cassandra.ICluster cluster = Cassandra.Cluster.Builder().AddContactPoint("127.0.0.1").WithPort(9042).Build();
 Cassandra.ISession session = cluster.Connect("cinema");
 
 builder.Services.AddSingleton(cluster);
