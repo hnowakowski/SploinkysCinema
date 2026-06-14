@@ -1,13 +1,11 @@
-import aiohttp
-import asyncio
 import time
 import requests
-from datetime import datetime, timezone
+import threading
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 URL = "https://localhost:7117/Reservation/api/reservations/post"
-
-# will count the 500's as fails and will count the 200's at the end to check how many seats each client got
-# could do multithreading but asyncio also makes all of this get evaluated in non-deterministic order
 
 PAYLOADS_A = []
 PAYLOADS_B = []
@@ -32,55 +30,50 @@ for i in range(100):
             "row": (i // 10) + 1
         })
 
-async def req(client_id, session):
+def req(client_id, stats):
     successes = 0
     fails = 0
     seats = 0
-    
+
     for i in range(100):
         if i % 20 == 0:
             print(f"Client {client_id} Iteration {i}")
         payload = PAYLOADS_A[i] if client_id == "Client_A" else PAYLOADS_B[i]
         try:
-            async with session.request("POST", URL, json=payload, ssl=False) as response:
-                if response.status == 500:
-                    print(f"Client {client_id} FAILED {i}, response code {response.status}")
-                    fails += 1
-                else:
-                    successes += 1
-                    if response.status == 200:
-                        seats += 1
+            response = requests.post(URL, json=payload, verify=False)
+            if response.status_code == 500:
+                print(f"Client {client_id} failed {i}, response code {response.status_code}")
+                fails += 1
+            else:
+                successes += 1
+                if response.status_code == 200:
+                    seats += 1
         except Exception as e:
-            print(f"Client {client_id} FAILED {i}, exception: {e}")
+            print(f"Client {client_id} failed {i}, exception: {e}")
             fails += 1
-    return successes, fails, seats
+    stats[client_id] = (successes, fails, seats)
 
-async def run():
+def run():
     print("\n==== WILLIAM AFTON VS. FREDDY FAZBEAR =====")
     start_time = time.perf_counter()
-    stats = {"Client_A": {"successes": 0, "fails": 0, "seats": 0}, "Client_B": {"successes": 0, "fails": 0, "seats": 0}}
-    
-    async with aiohttp.ClientSession() as session:
-            # i think client_a gets invoked first so might need to run it a few times to get a more even distribution, but it's rarely 100-0
-            results = await asyncio.gather(req("Client_A", session), req("Client_B", session))
-            
-            for id, (successes, fails, seats) in enumerate(results):
-                client_name = "Client_A" if id == 0 else "Client_B"
-                stats[client_name]["successes"] = successes
-                stats[client_name]["fails"] = fails
-                stats[client_name]["seats"] = seats
-                stats[client_name]["seats"] = seats
-                        
+    stats = {"Client_A": (0, 0, 0), "Client_B": (0, 0, 0)}
+    t1 = threading.Thread(target=req, args=("Client_A", stats))
+    t2 = threading.Thread(target=req, args=("Client_B", stats))
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+
     end_time = time.perf_counter()
     total_time = end_time - start_time
     
     print("\n==== RESULTS =====")
     print(f"Time elapsed: {total_time:.4f}s")
-    for client_name, data in stats.items():
+    for client_name, (successes, fails, seats) in stats.items():
         print(f"{client_name}:")
-        print(f"Successes:  {data['successes']}/{100}")
-        print(f"Fails:      {data['fails']}/{100}")
-        print(f"Seats:      {data['seats']}/{100}")
+        print(f"Successes:  {successes}/{100}")
+        print(f"Fails:      {fails}/{100}")
+        print(f"Seats:      {seats}/{100}")
 
 if __name__ == "__main__":
-    asyncio.run(run())
+    run()

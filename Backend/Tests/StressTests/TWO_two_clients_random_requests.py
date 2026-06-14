@@ -1,13 +1,14 @@
-import aiohttp
-import asyncio
+import threading
+import requests
 import time
 import random
-from datetime import datetime, timezone
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 BASE_URL = "https://localhost:7117/Reservation/api/reservations"
 
 # hard to verify the number of 409's and 404's here so i'll only count the number of 500's
-# could do multithreading but asyncio also makes all of this get evaluated in non-deterministic order
 
 ENDPOINTS = [
     {"method": "GET", "url": f"{BASE_URL}/getall"},
@@ -23,7 +24,7 @@ ENDPOINTS = [
      "json": {"movieId": "ab5a2bd2-4c5d-479e-b2a8-4ced35f7c2b1","movieName": "FNAF2","username": "William Afton","seat": 7,"row": 6}},
 ]
 
-async def req(client_id, session):
+def req(client_id, stats):
     successes = 0
     fails = 0
     
@@ -36,37 +37,37 @@ async def req(client_id, session):
         payload = endpoint.get("json", None)
         params = endpoint.get("params", None)
         try:
-            async with session.request(method, url, json=payload, params=params, ssl=False) as response:
-                if response.status == 500:
-                    print(f"Client {client_id} FAILED {i}, response code {response.status} on {method} {url}")
-                    fails += 1
-                else:
-                    successes += 1
+            response = requests.request(method, url, json=payload, params=params, verify=False)
+            if response.status_code == 500:
+                print(f"Client {client_id} FAILED {i}, response code {response.status_code} on {method} {url}")
+                fails += 1
+            else:
+                successes += 1
         except Exception as e:
             print(f"Client {client_id} FAILED {i}, exception: {e}")
             fails += 1
-    return successes, fails
+    stats[client_id] = (successes, fails)
 
-async def run():
+def run():
     print("\n==== TWO CLIENTS SPAMMING 100 RANDOM REQUESTS =====")
+    start_time = time.perf_counter()
+    stats = {"Client_A": (0, 0), "Client_B": (0, 0)}
+    t1 = threading.Thread(target=req, args=("Client_A", stats))
+    t2 = threading.Thread(target=req, args=("Client_B", stats))
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+    end_time = time.perf_counter()
     
-    async with aiohttp.ClientSession() as session:
-        task1 = req("Client_A", session)
-        task2 = req("Client_B", session)
-        
-        start_time = time.perf_counter()
-        results = await asyncio.gather(task1, task2)
-        end_time = time.perf_counter()
-        
-        total_time = end_time - start_time
-        
-        print("\n==== RESULTS =====")
-        print(f"Time elapsed: {total_time:.4f}s")
-        for idx, (successes, fails) in enumerate(results):
-            client_name = "Client_A" if idx == 0 else "Client_B"
-            print(f"{client_name}:")
-            print(f"Successes:  {successes}/{100}")
-            print(f"Fails:      {fails}/{100}")
+    total_time = end_time - start_time
+    
+    print("\n==== RESULTS =====")
+    print(f"Time elapsed: {total_time:.4f}s")
+    for client_name, (successes, fails) in stats.items():
+        print(f"{client_name}:")
+        print(f"Successes:  {successes}/{100}")
+        print(f"Fails:      {fails}/{100}")
 
 if __name__ == "__main__":
-    asyncio.run(run())
+    run()
