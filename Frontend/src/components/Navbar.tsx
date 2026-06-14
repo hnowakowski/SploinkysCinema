@@ -1,5 +1,5 @@
 import {useState} from "react";
-import { useUsername, setUsername } from "../store/user";
+import { useUsername, setUsername } from "../store/username";
 
 export default function Navbar() {
     const username = useUsername();
@@ -17,9 +17,12 @@ export default function Navbar() {
     return (
         <nav>
         <div style={{ display: 'flex', alignItems: 'center', padding: '0.75rem 1.5rem' }}>
-        <img src="/assets/logo.jpg" alt="logo" style={{ height: '100px' }} />
-        <span style={{ marginLeft: '0.75rem' }}>Sploinky's Cinema</span>
+        <a href="/">
+          <img src="/assets/logo.jpg" alt="logo" style={{ height: '100px' }} />
+        </a>
+        <span id="header-title" style={{ marginLeft: '0.75rem' }}>Sploinky's Cinema</span>
         <button
+          id = "header-button"
           onClick={() => setShowModal(true)}
           style={{ marginLeft: 'auto' }}
         >

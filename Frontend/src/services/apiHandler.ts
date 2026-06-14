@@ -7,8 +7,11 @@ const api = axios.create({baseURL: "/api/reservations"});
 export const getMovies = () =>
    api.get<Movie[]>('/getmovies');
 
+export const getMovie = (movieId: string) =>
+   api.get<Movie>('/getmovie', { params: { movieId } });
+
 export const getMovieSeats = (movieId: string) =>
-   api.get<number[][]>('/getmovieseats', { params: { movieId } });
+   api.get<Reservation[]>('/getmovieseats', { params: { movieId } });
 
 export const getReservation = (movieId: string, seat: number, row: number, username: string) =>
   api.get<Reservation>('/getreservation', { params: { movieId, seat, row, username } });

@@ -31,10 +31,10 @@ export default function IndexPage() {
     <main>
       <Navbar />
       <h1>GO WATCH THESE</h1>
-      <ul>
+      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
         {movies.map((movie) => (
-          <li key={movie.movieId}>
-              <button onClick={() => navigate(`/movie/${movie.movieId}`)}>
+          <li key={movie.movieId} style={{ marginBottom: "1rem" }}>
+              <button onClick={() => navigate(`/movie/${movie.movieId}`)} style={{ display: "block" }}>
                 <img src={movie.imagePath} alt={`Pretend this is an image for ${movie.movieName}`} width={400} />
                 <h3>{movie.movieName}</h3>
               </button>

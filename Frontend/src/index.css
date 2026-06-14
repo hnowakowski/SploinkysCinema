@@ -1,0 +1,45 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1{
+    text-align: center;
+}
+
+ul{
+    list-style: none;
+    gap: 20px;
+}
+
+body{
+    background-color: rgb(20, 20, 20);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+nav{
+    background-color: rgb(48, 48, 48);
+}
+
+#header-title{
+    font-size: 1.5rem;
+    padding: 10px;
+    font-weight: bold;
+}
+
+button{
+    background-color: darkgray;
+    padding: 10px;
+    font-size: large;
+    font-weight: bold;
+}
+
+#header-button{
+    padding: 25px;
+}
+
+.seat-button{
+    padding: 20px;
+}

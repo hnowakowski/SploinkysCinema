@@ -4,5 +4,4 @@ export interface Reservation {
   username: string;
   seat: number;
   row: number;
-  lastUpdate: string;
 }

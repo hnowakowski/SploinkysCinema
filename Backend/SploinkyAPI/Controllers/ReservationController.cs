@@ -65,6 +65,29 @@ namespace SploinkyAPI.Controllers
             }
         }
 
+
+        // get movie title and image on a given movie's page
+        [HttpGet]
+        [Route("api/reservations/getmovie")]
+        public async Task<ActionResult<Movie>> GetMovie(Guid movieId)
+        {
+            IMapper mapper = new Mapper(_session);
+            try
+            {
+                IEnumerable<Movie> movies = await mapper.FetchAsync<Movie>("SELECT * FROM MOVIES WHERE movie_id = ?;", movieId);
+                Movie? res = movies.ToList().FirstOrDefault();
+                if (res == null)
+                {
+                    return StatusCode(404, new { message = "Select failed, no movie found" });
+                }
+                return StatusCode(200, res);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Select failed: {ex.Message}" });
+            }
+        }
+
         // get all reservations for a given movie when opening the movie seat-picking window
         [HttpGet]
         [Route("api/reservations/getmovieseats")]
