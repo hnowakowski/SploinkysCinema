@@ -95,6 +95,14 @@ namespace SploinkyAPI.Controllers
         [Route("api/reservations/post")]
         public async Task<ActionResult> Insert(Reservation reservation)
         {
+            if (reservation.Row <= 0 || reservation.Row > 10)
+            {
+                return StatusCode(400, new { message = "Reservation failed, invalid row" });
+            }
+            else if (reservation.Seat <= 0 || reservation.Seat > 10)
+            {
+                return StatusCode(400, new { message = "Reservation failed, invalid seat" });
+            }
             // execute with a session instead of insert with a mapper cause i need to specify the full query
             // to add a check if seat was already taken and to get the status code
             SimpleStatement statement = new SimpleStatement(
