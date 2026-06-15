@@ -17,7 +17,7 @@ The database was two tables:
 
 Movies (movie_id, movie_name, image_path) - stores information about various movies
 
-Reservations (movie_id, movie_name, username, row, seat) - stroes information about who has reserved which seats on what movie
+Reservations (movie_id, movie_name, username, row, seat) - stores information about who has reserved which seats on what movie
 
 # API
 
@@ -37,7 +37,7 @@ The web app has two pages:
 
 To make a reservation you need to specify your username by clicking the `log in` button on the navigation bar.
 
-The component for making reservations is a 10x10 grid of accordinly colored buttons each of which will allow you to either view, make, transfer, or cancel a reservation depending on if it belongs to you or not.
+The component for making reservations is a 10x10 grid of accordinly colored buttons each of which will allow you to either view, make, transfer, or cancel a reservation depending on whether it belongs to you or not.
 
 # Issues encountered
 
