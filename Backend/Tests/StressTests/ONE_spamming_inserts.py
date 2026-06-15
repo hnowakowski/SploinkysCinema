@@ -12,8 +12,7 @@ PAYLOAD = {
     "movieName": "FNAF2",
     "username": "Freddy Fazbear",
     "seat": 7,
-    "row": 6,
-    "lastUpdate": datetime.now(timezone.utc).isoformat()
+    "row": 6
   }
 
 # It should have one 200 and 99 409's
