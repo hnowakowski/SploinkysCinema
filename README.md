@@ -6,12 +6,12 @@
 
 ## Step 2.
 
-Aquire `Visual Studio` and open `SploinkyAPI.sln` in `Backend/SploinkyAPI`
-And make sure the `CassandraCSarpDriver NuGet package by DataStax` is installed (if it isn't already in the solution)
-You **might** also need to install the `ASP.NET API` project type in the `Visual Studio Installer`
+Aquire `Visual Studio` and open `SploinkyAPI.sln` in `Backend/SploinkyAPI` <br>
+And make sure the `CassandraCSarpDriver NuGet package by DataStax` is installed (if it isn't already in the solution) <br>
+You **might** also need to install the `ASP.NET API` project type in the `Visual Studio Installer` <br>
 
-When you run it you can test individual api requests on swagger if you want
-All available requests are defined in `ReservationController.cs`
+When you run it you can test individual api requests on swagger if you want <br>
+All available requests are defined in `ReservationController.cs` <br>
 
 ## Step 3.
 
